@@ -3,48 +3,47 @@ import {ref, onMounted, onBeforeUnmount} from 'vue';
 import arrowBack from '../assets/icons/arrow_back.svg'
 import arrowForward from '../assets/icons/arrow_forward.svg'
 import {imagesArray} from "~/composable/states";
+import closeBtn from '../assets/icons/close.svg'
+import {width} from "@unocss/preset-mini/theme";
+import {last} from "@antfu/utils";
 
 const slides = imagesArray();
-
-onMounted(() => {
-  checkSlidesPerPage();
-  window.addEventListener('resize', checkSlidesPerPage);
-});
-
-const totalSlides = ref(slides.value.length);
-const currentSlidePerPage = ref(0);
 const slidesPerPage = ref(4);
+const firstShownSlideIndex = ref(0)
+const lastShownSlideIndex = ref(4);
 
+function showNextSlide() {
+  firstShownSlideIndex.value++;
+  lastShownSlideIndex.value++;
+}
 
-const checkSlidesPerPage = () => {
+function showPrevSlide() {
+  firstShownSlideIndex.value--;
+  lastShownSlideIndex.value--;
+}
 
-};
+function deleteImage(slideToDelete) {
+  slides.value.filter((slide) => {
+    return slideToDelete === slide;
+  })
+}
 
-const showNextSlide = () => {
-
-};
-
-const showPrevSlide = () => {
-
-};
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', checkSlidesPerPage);
-});
 </script>
 
 <template>
   <div class="slider">
-    <button @click="showPrevSlide">
+    <button v-if="firstShownSlideIndex > 0" @click="showPrevSlide">
       <img :src="arrowBack" alt="Back">
     </button>
-    <div class="slides">
-      <div v-for="(slide, index) in slides" :key="index"
-           :class="{ 'slide': true, 'shown-slide': index >= currentSlidePerPage && index < currentSlidePerPage + slidesPerPage }">
-        <img :src="slide.url" :alt="'Image ' + (index + 1)">
+      <div v-for="(slide, index) in slides.slice(firstShownSlideIndex, lastShownSlideIndex)" :key="index" class="slide">
+        <div class="image-wrapper">
+          <button class="remove-btn" @click="deleteImage(slide)">
+            <img :src="closeBtn" alt="close"/>
+          </button>
+          <img :src="slide.url" :alt="'Image ' + (index + 1)">
+        </div>
       </div>
-    </div>
-    <button @click="showNextSlide">
+    <button v-if="slides.length > lastShownSlideIndex+1" @click="showNextSlide">
       <img :src="arrowForward" alt="Next">
     </button>
   </div>
@@ -55,39 +54,46 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 90%;
-  height: 80%;
-  overflow: hidden;
   padding: 80px 20px 0;
-}
-
-.slides {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
   height: 100%;
   width: 100%;
 }
 
 .slide {
-  float: left;
   height: 100%;
-  min-width: 200px;
-  display: none;
-  padding: 8px;
+  width: 25%;
+  max-width: 50%;
+  padding: 15px;
+  margin: 5px;
 }
 
 .slide img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
-.shown-slide {
+.image-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  width: 100%;
+  height: 100%;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  height: 20px;
+  width: 20px;
+  padding: 2px;
+  border-radius: 50px;
+  background-color: white;
+  display: none;
+}
+.image-wrapper:hover > .remove-btn{
   display: block;
-}
-
-button {
-  height: fit-content;
-  width: fit-content;
 }
 </style>

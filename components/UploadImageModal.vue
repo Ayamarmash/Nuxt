@@ -20,7 +20,7 @@ function handleUploadImage(event: Event) {
   inputElement = event.target as HTMLInputElement;
   if (inputElement.files && inputElement.files.length > 0) {
     let addedFiles = Array.from(inputElement.files);
-    addedFiles.forEach((file)=>{
+    addedFiles.forEach((file) => {
       files.push(file);
       convertToBase64(file);
     })
@@ -28,18 +28,18 @@ function handleUploadImage(event: Event) {
 }
 
 function convertToBase64(file) {
-    const reader = new FileReader();
-    reader.onload = function (event) {
-      base64Images.value.push(event.target?.result)
-    };
-    valid.value = file.size <= 2000000;
-    if (valid) {
-      reader.readAsDataURL(file);
-    }
+  const reader = new FileReader();
+  reader.onload = function (event) {
+    base64Images.value.push(event.target?.result)
+  };
+  valid.value = file.size <= 2000000;
+  if (valid) {
+    reader.readAsDataURL(file);
+  }
 }
 
 function uploadImageClicked() {
-  uploadImages(base64Images.value).then(()=>{
+  uploadImages(base64Images.value).then(() => {
     base64Images.value.forEach((image) => {
       images.value.push({
         url: image
@@ -64,19 +64,25 @@ function onDrop(e: any) {
   e.preventDefault();
   isDragging.value = false;
   let droppedFiles = Array.from(e.dataTransfer.files);
-  droppedFiles.forEach((file)=>{
-    files.push(file);
-    convertToBase64(file);
-  })
+  droppedFiles.forEach((file) => {
+        if (file.type.startsWith('image/')) {
+          files.push(file);
+          convertToBase64(file);
+        } else {
+          alert('Invalid File Type')
+        }
+      }
+  )
 }
 
 function removeSelectedImage(image) {
-  base64Images.value = base64Images.value.filter((base64Image)=>{
+  base64Images.value = base64Images.value.filter((base64Image) => {
     return base64Image !== image;
   })
   inputElement.value = '';
 }
-function removeAllSelected(){
+
+function removeAllSelected() {
   base64Images.value = [];
   files = [];
   inputElement.value = '';
@@ -213,7 +219,7 @@ function removeAllSelected(){
   height: 100%;
   overflow-y: auto;
   width: 100%;
-  >*{
+  > * {
     margin-left: 15px;
   }
 }

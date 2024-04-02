@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import UploadImageModal from "~/components/UploadImageModal.vue";
-
+import Slider from "~/components/Slider.vue";
 let modalOpened = ref(true);
 function openUploadModal(){
   modalOpened.value = true;
@@ -18,7 +18,7 @@ function closeUploadModal(){
       <button class="upload-btn text-sm rounded-full" @click="openUploadModal">Upload</button>
     </header>
     <div class="gallery-main">
-      <slider/>
+      <Slider/>
       <UploadImageModal v-if="modalOpened" @closeModal="closeUploadModal"/>
     </div>
   </div>
