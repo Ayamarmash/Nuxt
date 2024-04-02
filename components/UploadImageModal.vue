@@ -99,13 +99,13 @@ function removeAllSelected() {
       </div>
       <div class="modal-input">
         <input multiple type="file" id="imageInput" accept="image/*" @change="handleUploadImage">
-        <div>OR</div>
+        <div style="font-size: 1em">OR</div>
         <div :class="{isDragging: isDragging}" class="text-blue-950	drag-and-drop-area" @dragover.prevent="onDragOver"
              @dragleave.prevent="onDragLeave" @drop.prevent="onDrop">
           <span v-if="!isDragging">Drag & Drop Image Here</span>
           <span v-if="isDragging">Drop Here</span>
         </div>
-        <div v-if="!valid" class="text-sm text-red-600">Invalid Image, Max Size = 2MB</div>
+        <div v-if="!valid" class="text-sm text-red-600">Max Size: 2MB</div>
       </div>
       <div v-if="base64Images.length > 0" class="preview-area">
         <div v-for="(image, index) in base64Images" :key="index">
@@ -148,13 +148,15 @@ function removeAllSelected() {
   height: 60vh;
   max-height: 70vh;
   min-height: fit-content;
-  width: 50%;
+  width: 50vw;
+  min-width: fit-content;
   border-radius: 10px;
   background-color: #ffffff;
   overflow: auto;
 }
 
 .modal-header {
+  width: 100%;
   color: #444444;
   display: flex;
   padding: 25px;
@@ -206,6 +208,8 @@ function removeAllSelected() {
   width: 50%;
   height: 50%;
   border: 2px #949292 dashed;
+  font-size: 1em;
+  text-align: center;
 }
 
 .isDragging {
@@ -217,8 +221,9 @@ function removeAllSelected() {
   align-items: center;
   padding: 10px 20px;
   height: 100%;
+  width: 40vw;
   overflow-y: auto;
-  width: 100%;
+  align-self: center;
   > * {
     margin-left: 15px;
   }

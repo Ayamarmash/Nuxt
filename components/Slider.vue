@@ -8,9 +8,13 @@ import {width} from "@unocss/preset-mini/theme";
 import {last} from "@antfu/utils";
 
 const slides = imagesArray();
-const slidesPerPage = ref(4);
 const firstShownSlideIndex = ref(0)
 const lastShownSlideIndex = ref(4);
+const slideWidth = ref(25)
+
+onMounted(() => {
+  addEventListener('resize', detectScreenSize);
+})
 
 function showNextSlide() {
   firstShownSlideIndex.value++;
@@ -22,12 +26,32 @@ function showPrevSlide() {
   lastShownSlideIndex.value--;
 }
 
-function deleteImage(slideToDelete) {
+function deleteImage(slideToDelete: any) {
   slides.value = slides.value.filter((slide) => {
     return slideToDelete !== slide;
   })
 }
 
+function detectScreenSize() {
+  const screenWidth = window.screen.availWidth;
+  if (screenWidth > 1045) {
+    lastShownSlideIndex.value = firstShownSlideIndex.value + 4; // slides per page
+    slideWidth.value = 25;
+  } else if (screenWidth > 800) {
+    lastShownSlideIndex.value = firstShownSlideIndex.value + 3;
+    slideWidth.value = 33;
+  } else if (screenWidth < 800) {
+    lastShownSlideIndex.value = firstShownSlideIndex.value + 2;
+    slideWidth.value = 50;
+  } else {
+    lastShownSlideIndex.value = firstShownSlideIndex.value + 1;
+    slideWidth.value = 100;
+  }
+}
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', detectScreenSize);
+});
 </script>
 
 <template>
@@ -35,15 +59,16 @@ function deleteImage(slideToDelete) {
     <button v-if="firstShownSlideIndex > 0" @click="showPrevSlide">
       <img :src="arrowBack" alt="Back">
     </button>
-      <div v-for="(slide, index) in slides.slice(firstShownSlideIndex, lastShownSlideIndex)" :key="index" class="slide">
-        <div class="image-wrapper">
-          <button class="remove-btn" @click="deleteImage(slide)">
-            <img :src="closeBtn" alt="close"/>
-          </button>
-          <img :src="slide.url" :alt="'Image ' + (index + 1)">
-        </div>
+    <div v-for="(slide, index) in slides.slice(firstShownSlideIndex, lastShownSlideIndex)"
+         :style="{ width: slideWidth + '%' }" :key="index" class="slide">
+      <div class="image-wrapper">
+        <button class="remove-btn" @click="deleteImage(slide)">
+          <img :src="closeBtn" alt="close"/>
+        </button>
+        <img :src="slide.url" :alt="'Image ' + (index + 1)">
       </div>
-    <button v-if="slides.length > lastShownSlideIndex+1" @click="showNextSlide">
+    </div>
+    <button v-if="slides.length > lastShownSlideIndex" @click="showNextSlide">
       <img :src="arrowForward" alt="Next">
     </button>
   </div>
@@ -54,7 +79,7 @@ function deleteImage(slideToDelete) {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 80px 20px 0;
+  padding: 80px;
   height: 100%;
   width: 100%;
 }
@@ -70,7 +95,6 @@ function deleteImage(slideToDelete) {
 .slide img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
 }
 
 .image-wrapper {
