@@ -7,8 +7,7 @@ import {imagesArray} from "~/composable/states";
 const images = imagesArray();
 const emit = defineEmits(['closeModal']);
 let base64Images = ref([])
-let image: Blob; /////
-let files: [];
+let files: any[] = [];
 let valid = ref(true);
 let isDragging = ref(false);
 let inputElement: HTMLInputElement;
@@ -20,33 +19,34 @@ function closeModal() {
 function handleUploadImage(event: Event) {
   inputElement = event.target as HTMLInputElement;
   if (inputElement.files && inputElement.files.length > 0) {
-    files = Array.from(inputElement.files);
+    let addedFiles = Array.from(inputElement.files);
+    addedFiles.forEach((file)=>{
+      files.push(file);
+      convertToBase64(file);
+    })
   }
-  convertToBase64();
 }
 
-function convertToBase64() {
-  files.forEach((file) => {
+function convertToBase64(file) {
     const reader = new FileReader();
     reader.onload = function (event) {
       base64Images.value.push(event.target?.result)
     };
-
     valid.value = file.size <= 2000000;
     if (valid) {
       reader.readAsDataURL(file);
     }
-  })
 }
 
 function uploadImageClicked() {
-  uploadImages(base64Images.value);
-  base64Images.value.forEach((image) => {
-    images.value.push({
-      url: image
+  uploadImages(base64Images.value).then(()=>{
+    base64Images.value.forEach((image) => {
+      images.value.push({
+        url: image
+      })
     })
-  })
-  removeSelectedImage();
+    removeAllSelected();
+  });
 }
 
 function onDragOver(e: any) {
@@ -63,9 +63,11 @@ function onDragLeave(e: any) {
 function onDrop(e: any) {
   e.preventDefault();
   isDragging.value = false;
-  let filesDropped = e.dataTransfer.files;
-  files.concat(filesDropped);
-  convertToBase64();
+  let droppedFiles = Array.from(e.dataTransfer.files);
+  droppedFiles.forEach((file)=>{
+    files.push(file);
+    convertToBase64(file);
+  })
 }
 
 function removeSelectedImage(image) {
@@ -74,7 +76,11 @@ function removeSelectedImage(image) {
   })
   inputElement.value = '';
 }
-
+function removeAllSelected(){
+  base64Images.value = [];
+  files = [];
+  inputElement.value = '';
+}
 </script>
 
 <template>
@@ -130,13 +136,15 @@ function removeSelectedImage(image) {
 }
 
 .modal-content {
-  width: 50%;
-  height: 60%;
-  border-radius: 10px;
-  background-color: #ffffff;
   display: flex;
   flex-direction: column;
-  min-width: fit-content;
+  justify-content: space-between;
+  height: 60vh;
+  max-height: 70vh;
+  min-height: fit-content;
+  width: 50%;
+  border-radius: 10px;
+  background-color: #ffffff;
   overflow: auto;
 }
 
@@ -156,9 +164,9 @@ function removeSelectedImage(image) {
 
 .modal-input {
   display: flex;
+  flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  flex-direction: column;
   width: 100%;
   height: 100%;
   padding: 20px;
@@ -200,11 +208,14 @@ function removeSelectedImage(image) {
 
 .preview-area {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  height: 90%;
-  overflow-x: auto;
+  height: 100%;
+  overflow-y: auto;
+  width: 100%;
+  >*{
+    margin-left: 15px;
+  }
 }
 
 .selected-image-wrapper {
