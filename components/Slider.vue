@@ -23,8 +23,8 @@ function showPrevSlide() {
 }
 
 function deleteImage(slideToDelete) {
-  slides.value.filter((slide) => {
-    return slideToDelete === slide;
+  slides.value = slides.value.filter((slide) => {
+    return slideToDelete !== slide;
   })
 }
 
