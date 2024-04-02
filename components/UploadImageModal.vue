@@ -51,6 +51,7 @@ async function uploadImageClicked() {
       });
       removeAllSelected();
       alert('Image Uploaded Successfully')
+      closeModal();
     });
   } catch (error) {
     alert('Error occurred during image upload:' + error);
