@@ -40,7 +40,7 @@ function detectScreenSize() {
   } else if (screenWidth > 800) {
     lastShownSlideIndex.value = firstShownSlideIndex.value + 3;
     slideWidth.value = 33;
-  } else if (screenWidth < 800) {
+  } else if (screenWidth < 800 && screenWidth > 500) {
     lastShownSlideIndex.value = firstShownSlideIndex.value + 2;
     slideWidth.value = 50;
   } else {
@@ -86,8 +86,6 @@ onBeforeUnmount(() => {
 
 .slide {
   height: 100%;
-  width: 25%;
-  max-width: 50%;
   padding: 15px;
   margin: 5px;
 }
