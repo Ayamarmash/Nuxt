@@ -3,14 +3,16 @@ import {defineEmits, ref} from 'vue';
 import {uploadImages} from "~/services/vintrackersAPI";
 import closeBtn from '../assets/icons/close.svg'
 import {imagesArray} from "~/composable/states";
+import Spinner from "vue-simple-spinner/src/components/Spinner.vue";
 
 const images = imagesArray();
 const emit = defineEmits(['closeModal']);
-let base64Images = ref([])
+const base64Images = ref([])
 let files: any[] = [];
-let valid = ref(true);
-let isDragging = ref(false);
+const valid = ref(true);
+const isDragging = ref(false);
 let inputElement: HTMLInputElement;
+const isLoading = ref(false);
 
 function closeModal() {
   emit('closeModal');
@@ -38,15 +40,23 @@ function convertToBase64(file) {
   }
 }
 
-function uploadImageClicked() {
-  uploadImages(base64Images.value).then(() => {
-    base64Images.value.forEach((image) => {
-      images.value.push({
-        url: image
-      })
-    })
-    removeAllSelected();
-  });
+async function uploadImageClicked() {
+  isLoading.value = true;
+  try {
+    await uploadImages(base64Images.value).then(() => {
+      base64Images.value.forEach((image) => {
+        images.value.push({
+          url: image
+        });
+      });
+      removeAllSelected();
+      alert('Image Uploaded Successfully')
+    });
+  } catch (error) {
+    alert('Error occurred during image upload:' + error);
+  } finally {
+    isLoading.value = false;
+  }
 }
 
 function onDragOver(e: any) {
@@ -97,7 +107,8 @@ function removeAllSelected() {
         <div class="text-base	font-semibold">Upload New Photo</div>
         <button class="close-btn" @click="closeModal"><img alt="close" :src="closeBtn"/></button>
       </div>
-      <div class="modal-input">
+      <Spinner size="50px" v-if="isLoading"></Spinner>
+      <div v-if="!isLoading" class="modal-input">
         <input multiple type="file" id="imageInput" accept="image/*" @change="handleUploadImage">
         <div style="font-size: 1em">OR</div>
         <div :class="{isDragging: isDragging}" class="text-blue-950	drag-and-drop-area" @dragover.prevent="onDragOver"
@@ -107,7 +118,7 @@ function removeAllSelected() {
         </div>
         <div v-if="!valid" class="text-sm text-red-600">Max Size: 2MB</div>
       </div>
-      <div v-if="base64Images.length > 0" class="preview-area">
+      <div v-if="base64Images.length > 0 && !isLoading" class="preview-area">
         <div v-for="(image, index) in base64Images" :key="index">
           <div @click="removeSelectedImage(image)" class="selected-image-wrapper">
             <div class="remove-selected">Remove</div>
@@ -224,6 +235,7 @@ function removeAllSelected() {
   width: 40vw;
   overflow-y: auto;
   align-self: center;
+
   > * {
     margin-left: 15px;
   }

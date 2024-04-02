@@ -6,7 +6,7 @@ async function uploadImages(images: string[]) {
             const body = {
                 images: images
             };
-            const response = await fetch(baseAPI + '/upload/images/', { // Corrected URL
+            const response = await fetch(baseAPI + '/upload/images/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

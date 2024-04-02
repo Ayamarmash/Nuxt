@@ -2,7 +2,8 @@
 import {ref} from "vue";
 import UploadImageModal from "~/components/UploadImageModal.vue";
 import Slider from "~/components/Slider.vue";
-let modalOpened = ref(true);
+import {imagesArray} from "~/composable/states";
+let modalOpened = ref(false);
 function openUploadModal(){
   modalOpened.value = true;
 }
@@ -18,7 +19,10 @@ function closeUploadModal(){
       <button class="upload-btn text-sm rounded-full" @click="openUploadModal">Upload</button>
     </header>
     <div class="gallery-main">
-      <Slider/>
+      <Slider v-if="imagesArray().value.length > 0"/>
+      <div v-if="imagesArray().value.length === 0" class="no-results">
+        No Results, Upload a Photo!
+      </div>
       <UploadImageModal v-if="modalOpened" @closeModal="closeUploadModal"/>
     </div>
   </div>
@@ -48,6 +52,16 @@ header {
   display: flex;
   justify-content: center;
   height: 100%;
+}
+
+.no-results{
+  text-align: center;
+  width: 100%;
+  height: fit-content;
+  padding-top: 250px;
+  font-weight: bolder;
+  color: #444444;
+  font-size: 1.5em;
 }
 
 </style>
