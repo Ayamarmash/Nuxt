@@ -2,10 +2,8 @@
 import {ref, onMounted, onBeforeUnmount} from 'vue';
 import arrowBack from '../assets/icons/arrow_back.svg'
 import arrowForward from '../assets/icons/arrow_forward.svg'
-import {imagesArray} from "~/composable/states";
+import {imagesArray} from "~/store/states";
 import closeBtn from '../assets/icons/close.svg'
-import {width} from "@unocss/preset-mini/theme";
-import {last} from "@antfu/utils";
 
 const slides = imagesArray();
 const firstShownSlideIndex = ref(0)

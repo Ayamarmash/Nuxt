@@ -8,11 +8,11 @@ import Spinner from "vue-simple-spinner/src/components/Spinner.vue";
 const images = imagesArray();
 const emit = defineEmits(['closeModal']);
 const base64Images = ref([])
-let files: any[] = [];
 const valid = ref(true);
 const isDragging = ref(false);
-let inputElement: HTMLInputElement;
 const isLoading = ref(false);
+let files: any[] = [];
+let inputElement: HTMLInputElement;
 
 function closeModal() {
   emit('closeModal');
@@ -29,7 +29,7 @@ function handleUploadImage(event: Event) {
   }
 }
 
-function convertToBase64(file) {
+function convertToBase64(file: Blob) {
   const reader = new FileReader();
   reader.onload = function (event) {
     base64Images.value.push(event.target?.result)

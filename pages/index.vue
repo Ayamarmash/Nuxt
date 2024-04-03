@@ -3,10 +3,13 @@ import {ref} from "vue";
 import UploadImageModal from "~/components/UploadImageModal.vue";
 import Slider from "~/components/Slider.vue";
 import {imagesArray} from "~/composable/states";
-let modalOpened = ref(false);
+
+const modalOpened = ref(false);
+
 function openUploadModal(){
   modalOpened.value = true;
 }
+
 function closeUploadModal(){
   modalOpened.value = false;
 }
