@@ -2,7 +2,7 @@
 import {defineEmits, ref} from 'vue';
 import {uploadImages} from "~/services/vintrackersAPI";
 import closeBtn from '../assets/icons/close.svg'
-import {imagesArray} from "~/composable/states";
+import {imagesArray} from "~/store/states";
 import Spinner from "vue-simple-spinner/src/components/Spinner.vue";
 
 const images = imagesArray();

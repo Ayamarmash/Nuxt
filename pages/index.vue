@@ -2,7 +2,7 @@
 import {ref} from "vue";
 import UploadImageModal from "~/components/UploadImageModal.vue";
 import Slider from "~/components/Slider.vue";
-import {imagesArray} from "~/composable/states";
+import {imagesArray} from "~/store/states";
 
 const modalOpened = ref(false);
 

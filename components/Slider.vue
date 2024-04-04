@@ -24,7 +24,7 @@ function showPrevSlide() {
   lastShownSlideIndex.value--;
 }
 
-function deleteImage(slideToDelete: any) {
+function deleteImage(slideToDelete: string) {
   slides.value = slides.value.filter((slide) => {
     return slideToDelete !== slide;
   })
