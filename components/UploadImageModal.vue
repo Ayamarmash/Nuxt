@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {defineEmits, ref} from 'vue';
-import {uploadImages} from "~/services/vintrackersAPI";
+import {uploadImages} from "~/services/API";
 import closeBtn from '../assets/icons/close.svg'
 import {imagesArray} from "~/store/states";
 import Spinner from "vue-simple-spinner/src/components/Spinner.vue";
@@ -55,8 +55,6 @@ async function uploadImageClicked() {
     });
   } catch (error) {
     alert('Error occurred during image upload:' + error);
-  } finally {
-    isLoading.value = false;
   }
 }
 
@@ -94,9 +92,12 @@ function removeSelectedImage(image) {
 }
 
 function removeAllSelected() {
+
   base64Images.value = [];
   files = [];
-  inputElement.value = '';
+  if (inputElement) {
+    inputElement.value = '';
+  }
 }
 </script>
 
@@ -128,7 +129,8 @@ function removeAllSelected() {
         </div>
       </div>
       <div class="modal-footer">
-        <button class="upload-btn text-sm" @click="uploadImageClicked" :disabled="!valid">Upload</button>
+        <button id="uploadImage" class="upload-btn text-sm" @click="uploadImageClicked" :disabled="!valid">Upload
+        </button>
       </div>
     </div>
   </div>
