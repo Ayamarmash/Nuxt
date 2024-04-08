@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import UploadImageModal from "~/components/UploadImageModal.vue";
-import Slider from "~/components/Slider.vue";
+import Slider from "~/components/ImagesSlider.vue";
 import {imagesArray} from "~/store/states";
 
 const modalOpened = ref(false);
@@ -22,7 +22,7 @@ function closeUploadModal(){
       <button class="upload-btn text-sm rounded-full" @click="openUploadModal">Upload</button>
     </header>
     <div class="gallery-main">
-      <Slider v-if="imagesArray().value.length > 0"/>
+      <ImagesSlider id="imagesSlider" v-if="imagesArray().value.length > 0"/>
       <div v-if="imagesArray().value.length === 0" class="no-results">
         No Results, Upload a Photo!
       </div>

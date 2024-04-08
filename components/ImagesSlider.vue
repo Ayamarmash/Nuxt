@@ -60,7 +60,7 @@ onBeforeUnmount(() => {
     <div v-for="(slide, index) in slides.slice(firstShownSlideIndex, lastShownSlideIndex)"
          :style="{ width: slideWidth + '%' }" :key="index" class="slide">
       <div class="image-wrapper">
-        <button class="remove-btn" @click="deleteImage(slide)">
+        <button id="deleteImage" class="remove-btn" @click="deleteImage(slide)">
           <img :src="closeBtn" alt="close"/>
         </button>
         <img :src="slide.url" :alt="'Image ' + (index + 1)">
