@@ -5,7 +5,6 @@ import ImagesSlider from "~/components/ImagesSlider.vue";
 import {expect, test} from 'vitest'
 import {image} from './lessThan2MB'
 import {imagesArray} from "~/store/states";
-
 const images = imagesArray();
 
 test('Upload Image Modal opens when user clicks on Upload Button', async () => {
@@ -19,6 +18,11 @@ test('Upload Image Modal opens when user clicks on Upload Button', async () => {
 
 test('Check if Image is added to slider after being uploaded', async () => {
     const mainPage = await mountSuspended(index);
+    const uploadModal = await mountSuspended(UploadImageModal);
+    // @ts-ignore
+    uploadModal.vm.base64Images.value = [image];
+    uploadModal.find('uploadImage').trigger('click');
+
 
     expect(images.value.length).toBe(0);
     // @ts-ignore
