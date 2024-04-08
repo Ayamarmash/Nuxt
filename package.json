@@ -20,9 +20,7 @@
   "devDependencies": {
     "@nuxt/test-utils": "^3.12.0",
     "@vue/test-utils": "^2.4.5",
-    "concurrently": "^8.2.2",
     "happy-dom": "^13.10.1",
-    "http-request-mock": "^1.8.18",
     "playwright-core": "^1.42.1",
     "tailwindcss": "^3.4.3",
     "vitest": "^1.4.0"
